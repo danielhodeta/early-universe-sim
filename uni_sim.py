@@ -1,12 +1,16 @@
 import pygame
 import random
 import math
+import sys 
 
 #GLOBAL PARAMETERS
-PARTICLE_NUMBER = 300 #>= 3
+if (len(sys.argv)>1):
+    PARTICLE_NUMBER = int(sys.argv[1]) #>= 3
+else:
+    PARTICLE_NUMBER = 100
 WIDTH = 700
 HEIGHT = 600
-G_CONST = PARTICLE_NUMBER/150
+G_CONST = math.pow(1.6, PARTICLE_NUMBER/100)
 GRAVITY = []
 for i in range (PARTICLE_NUMBER):
     row = []
