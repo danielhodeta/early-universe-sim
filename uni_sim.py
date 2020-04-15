@@ -78,16 +78,6 @@ class Particle:
         #attributes for no bounds
         self.x = (self.x + self.speedX)
         self.y = (self.y + self.speedY)
-
-        #attributes for virtual torus
-        # self.x = (self.x + self.speedX) % WIDTH
-        # self.y = (self.y + self.speedY) % HEIGHT
-
-        #self.y bound for bottom gravity
-        # if (self.y >= HEIGHT-self.size):
-        #     self.y = HEIGHT - self.size
-        # else:
-        #     self.y = (self.y + self.speedY)
     
     def macro_gravity(self, index, particles):
         for i in range (len(particles)):
