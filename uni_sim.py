@@ -54,8 +54,10 @@ class Particle:
         else:
             self.p_x = self.mass * self.speedX
             self.p_y = self.mass * self.speedY
+    
     def resize(self):
         self.size =  int(math.sqrt(3/8*math.pi*self.mass)) #3/8 as opposed to 3/4 to get orbits
+    
     def calc_p(self):
         if (type == 'photon'): #Next step: photon has momentum
             self.p_x = 0
@@ -63,12 +65,45 @@ class Particle:
         else:
             self.p_x = self.mass * self.speedX
             self.p_y = self.mass * self.speedY
+    
     def v_set(self, s_x, s_y):
         self.speedX = s_x
         self.speedY = s_y
         self.calc_p()
+    
+    def collision(self, particle):
+        #make it bigger
+        self.mass+= particle.mass
+        self.resize()
+        #momentum transfer
+        self.speedX = (self.p_x + particle.p_x)/self.mass
+        self.speedY = (self.p_y + particle.p_y)/self.mass
+        #Delete the second particle
+        particle.pseduo_delete()
+
+    def make_photon(self):
+        #Change mass
+        self.mass = 0
+        #Change type
+        self.type = 'photon'
+        #Change color
+        self.color = (255, 166, 83)
+        #Change speed
+        self.speedX = 0
+        self.speedY = 0
+        #Change size
+        self.resize()
+        #Calculate p
+        self.calc_p()
+    
+    def annihilation(self, particle):
+        #convert both into a photon
+        self.make_photon()
+        particle.make_photon()
+
     def display(self):
         pygame.draw.circle(screen, self.color, (int(self.x),int(self.y)), self.size, self.size)
+    
     def move(self, index):
         self.vectors = GRAVITY[index]
         for vector in self.vectors:
@@ -93,14 +128,11 @@ class Particle:
                 #Once collision, gravitational force set to 0 because we don't want it to shoot to infinity
                 GRAVITY[index][i] = ([0,0])
                 GRAVITY[i][index] = ([0,0])
-                #make it bigger
-                self.mass+= particles[i].mass
-                self.resize()
-                #Object comes to a halt upon collision -- momentum transfer is next step
-                self.speedX = (self.p_x + particles[i].p_x)/self.mass
-                self.speedY = (self.p_y + particles[i].p_y)/self.mass
-                #Delete the second particle
-                particles[i].pseduo_delete()
+                if (self.type == 'matter' or self.type == 'anti_matter'):
+                    if (particles[i].type == self.type):
+                        self.collision(particles[i])
+                    else:
+                        self.annihilation(particles[i])
             #Normal condition
             else: 
                 Force = (G_CONST * self.mass * particles[i].mass)/(r2)
@@ -111,6 +143,7 @@ class Particle:
 
                 GRAVITY[index][i] = ([ForceX, ForceY])
                 GRAVITY[i][index] = ([ForceX, ForceY])
+    
     def pseduo_delete (self):
         self.mass = 0
         self.v_set(0,0)
@@ -142,7 +175,7 @@ def main():
     icon = pygame.image.load('icon.png')
     pygame.display.set_icon(icon) 
 
-    particles = createParticles(1,0,0)
+    particles = createParticles(1,1,0)
 
     #Simulation loop
     running = True
