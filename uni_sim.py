@@ -5,16 +5,16 @@ import sys
 
 #GLOBAL PARAMETERS
 if (len(sys.argv)>1):
-    PARTICLE_NUMBER = int(sys.argv[1]) #>= 3
+    PARTICLE_NUMBER = int(sys.argv[1]) #>= 3        User input 
     if (len(sys.argv)==5):
         MATTER_RATIO = float(sys.argv[2])
         ANTI_MATTER_RATIO = float(sys.argv[3])
         PHOTON_RATIO = float(sys.argv[4])
-    else:
+    else:                                           #Default params
         MATTER_RATIO = 1/3
         ANTI_MATTER_RATIO = 1/3
         PHOTON_RATIO = 1/3 
-else:
+else:                                               #Default params 
     PARTICLE_NUMBER = 100
     MATTER_RATIO = 1/3
     ANTI_MATTER_RATIO = 1/3
