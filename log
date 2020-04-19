@@ -8,4 +8,4 @@ April 18 => photon-speed branch committ
 - Modified annihilation function to produce new particles from annihilation. This is applicable to matter and antimatter pairs with masses greater than one. In this situation, two photons will be produced and a matter and antimatter pair with smaller mass
 - Added checks in macro_gravity() to prevent deleted particles from having an effect, photons are also skipped
 - Added checks to division functions to avoid divide by zero
-- Momentum is now conserved during annihilation
+- Momentum is now conserved during annihilation.

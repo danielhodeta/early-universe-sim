@@ -10,7 +10,7 @@ else:
     PARTICLE_NUMBER = 100
 WIDTH = 700
 HEIGHT = 600
-G_CONST = math.pow(1.6, PARTICLE_NUMBER/100)
+G_CONST = math.pow(2, PARTICLE_NUMBER/100)
 GRAVITY = []
 for i in range (PARTICLE_NUMBER):
     row = []
@@ -147,14 +147,16 @@ class Particle:
             GRAVITY[i].append([0,0])
 
     def annihilation(self, particle, particles):
-        #convert both into a photon
         if (self.mass == 1):
             self.make_photon()
         else:
             new_particle = Particle(self.type)
             new_particle.change_mass(self.mass - 1)
             new_particle.set_pos(particle.x, particle.y)
-            new_particle.v_set(-particle.speedX, -particle.speedY)
+
+            new_speedx = -particle.p_x/new_particle.mass
+            new_speedy = -particle.p_y/new_particle.mass
+            new_particle.v_set(new_speedx, new_speedy)
             self.make_photon()
 
             new_particle.add_particle(particles)
@@ -165,7 +167,10 @@ class Particle:
             new_particle = Particle(particle.type)
             new_particle.change_mass(particle.mass - 1)
             new_particle.set_pos(self.x, self.y)
-            new_particle.v_set(-self.speedX, -self.speedY)
+
+            new_speedx = -self.p_x/new_particle.mass
+            new_speedy = -self.p_y/new_particle.mass
+            new_particle.v_set(new_speedx, new_speedy)
             particle.make_photon()
 
             new_particle.add_particle(particles)
@@ -209,7 +214,7 @@ class Particle:
                         self.annihilation(particles[i], particles)
             #Normal condition
             else: 
-                Force = (G_CONST * self.mass * particles[i].mass)/(r2)
+                Force = (G_CONST * self.mass * particles[i].mass)/r2)
                 signX = 1 if dx==0 else dx/abs(dx)
                 signY = 1 if dy==0 else dy/abs(dy)
                 ForceX = Force*math.cos(angle)*signX
