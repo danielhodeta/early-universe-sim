@@ -1,3 +1,8 @@
+Prior to April 14:
+- Developed Particle class and simulation structure
+- Collisions without momentum implemented
+- No annihilation between matter and antimatter
+
 April 14 => n/2-compare-multi-grav committ
 - Collisions with Momentum implemented
 - Size is offset by factor
@@ -29,4 +34,5 @@ April 19 => density-input committ
 April 19 => alternate gravity merge committ
 - Added conditions to collisions to make it so that the small body merges into the larger one
 - Separated simulator into three files: the main simulator, the particle class and the global variable file
-- Next: annihilation momentum, collision momentum 
+- Halved the square of the threshold distance needed for collision to make objects come closer to each other before merging
+
