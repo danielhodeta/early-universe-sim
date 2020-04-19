@@ -21,3 +21,7 @@ April 18 => photon-speed branch committ
 - Added checks in macro_gravity() to prevent deleted particles from having an effect, photons are also skipped
 - Added checks to division functions to avoid divide by zero
 - Momentum is now conserved during annihilation.
+
+April 19 => density-input committ
+- Enabled matter, anti-matter and photon density input
+- Made screen bigger
