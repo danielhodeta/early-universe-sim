@@ -2,3 +2,14 @@ April 18 => m-a-annihil branch committ
 - Moved collision to a different function to modularize and add annihilation function
 - Added a function to convert a particle into a photon
 - Added a function to annihilate matter antimatter pairs, momentum is not conserved
+April 18 => photon-speed branch committ
+- Added universal speed limits for baryons and photons
+- Initialized photons with light speed
+- Added function to change mass and resize automatically
+- Modified v_set function to dampen particle speeds based on universal speed limits
+- v_set also scales photon speed up to light speed
+- added a function to add a new particle to the particle array and GRAVITY array
+- Modified annihilation function to produce new particles from annihilation. This is applicable to matter and antimatter pairs with masses greater than one. In this situation, two photons will be produced and a matter and antimatter pair with smaller mass
+- Added checks in macro_gravity() to prevent deleted particles from having an effect, photons are also skipped
+- Added checks to division functions to avoid divide by zero
+- Momentum is now conserved during annihilation.

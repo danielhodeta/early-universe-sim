@@ -10,13 +10,18 @@ else:
     PARTICLE_NUMBER = 100
 WIDTH = 700
 HEIGHT = 600
-G_CONST = math.pow(1.6, PARTICLE_NUMBER/100)
+G_CONST = math.pow(2, PARTICLE_NUMBER/100)
 GRAVITY = []
 for i in range (PARTICLE_NUMBER):
     row = []
     for j in range (PARTICLE_NUMBER):
         row.append([0,0])
     GRAVITY.append(row)
+
+#Universal Speed Limits
+LIGHT_SPEED = 1
+BARYON_SPEED_MAX = 0.7
+
 #Set screen
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -39,8 +44,13 @@ class Particle:
         else:
             self.color = (0,0,0) 
         #Velocity init
-        self.speedX = 0#random.uniform (-1,1)
-        self.speedY = 0#random.uniform (-1,1)
+        if (type != 'photon'):
+            self.speedX = 0#random.uniform (-1,1)
+            self.speedY = 0#random.uniform (-1,1)
+        else:
+            self.speedX = random.uniform(-LIGHT_SPEED, LIGHT_SPEED)
+            y_direction = (random.randrange(-1, 2, 2))
+            self.speedY = y_direction * math.sqrt(math.pow(LIGHT_SPEED, 2) - math.pow(self.speedX, 2))
         #Mass init
         if (type == 'photon'):
             self.mass = 0
@@ -58,6 +68,10 @@ class Particle:
     def resize(self):
         self.size =  int(math.sqrt(3/8*math.pi*self.mass)) #3/8 as opposed to 3/4 to get orbits
     
+    def change_mass(self, new_mass):
+        self.mass = new_mass
+        self.resize()
+
     def calc_p(self):
         if (type == 'photon'): #Next step: photon has momentum
             self.p_x = 0
@@ -67,10 +81,36 @@ class Particle:
             self.p_y = self.mass * self.speedY
     
     def v_set(self, s_x, s_y):
-        self.speedX = s_x
-        self.speedY = s_y
-        self.calc_p()
+        speedVector = math.sqrt(math.pow(s_x, 2) + math.pow(s_y, 2))
+        factor = 0
+        if (self.type == 'photon'):
+            if (speedVector == LIGHT_SPEED):
+                factor = 1
+            else:
+                factor = LIGHT_SPEED / speedVector if speedVector> 0 else 0
+        else:
+            if (speedVector <= BARYON_SPEED_MAX):
+                factor = 1
+            else:
+                factor = BARYON_SPEED_MAX/speedVector if speedVector> 0 else 0
+        if (factor):
+            self.speedX = s_x * factor
+            self.speedY = s_y * factor
+            self.calc_p()
+        elif (self.type == 'photon'):
+            self.speedX = random.uniform(-LIGHT_SPEED, LIGHT_SPEED)
+            y_direction = (random.randrange(-1, 2, 2))
+            self.speedY = y_direction * math.sqrt(math.pow(LIGHT_SPEED, 2) - math.pow(self.speedX, 2))
+            self.calc_p()
+        else:
+            self.speedX = 0
+            self.speedY = 0
+            self.calc_p()
     
+    def set_pos(self, x, y):
+        self.x = x
+        self.y = y
+
     def collision(self, particle):
         #make it bigger
         self.mass+= particle.mass
@@ -89,17 +129,51 @@ class Particle:
         #Change color
         self.color = (255, 166, 83)
         #Change speed
-        self.speedX = 0
-        self.speedY = 0
+        self.v_set(self.speedX, self.speedY)            #v_set() automatically scales speedX and speedY to reach LIGHT_SPEED
         #Change size
         self.resize()
         #Calculate p
         self.calc_p()
     
-    def annihilation(self, particle):
-        #convert both into a photon
-        self.make_photon()
-        particle.make_photon()
+    def add_particle(self, particles):
+        particles.append(self)
+        #add to GRAVITY array
+        gravity_array = []
+        for i in range(len(GRAVITY)+1):
+            gravity_array.append([0,0])
+        GRAVITY.append(gravity_array)
+
+        for i in range(len(GRAVITY)-1):
+            GRAVITY[i].append([0,0])
+
+    def annihilation(self, particle, particles):
+        if (self.mass == 1):
+            self.make_photon()
+        else:
+            new_particle = Particle(self.type)
+            new_particle.change_mass(self.mass - 1)
+            new_particle.set_pos(particle.x, particle.y)
+
+            new_speedx = -particle.p_x/new_particle.mass
+            new_speedy = -particle.p_y/new_particle.mass
+            new_particle.v_set(new_speedx, new_speedy)
+            self.make_photon()
+
+            new_particle.add_particle(particles)
+        
+        if (particle.mass == 1):
+            particle.make_photon()
+        else:
+            new_particle = Particle(particle.type)
+            new_particle.change_mass(particle.mass - 1)
+            new_particle.set_pos(self.x, self.y)
+
+            new_speedx = -self.p_x/new_particle.mass
+            new_speedy = -self.p_y/new_particle.mass
+            new_particle.v_set(new_speedx, new_speedy)
+            particle.make_photon()
+
+            new_particle.add_particle(particles)
 
     def display(self):
         pygame.draw.circle(screen, self.color, (int(self.x),int(self.y)), self.size, self.size)
@@ -115,13 +189,18 @@ class Particle:
         self.y = (self.y + self.speedY)
     
     def macro_gravity(self, index, particles):
+        if (self.type == 'photon' or self.deleted):
+            return
         for i in range (len(particles)):
-            if i == index or self.deleted:
+            if i == index: # don't calculate gravity on self
                 continue
+            elif (particles[i].deleted or particles[i].type=='photon'): #if deleted or photon skip
+                continue
+
             dx = particles[i].x - self.x
             dy = particles[i].y - self.y
             r2 = math.pow(dx, 2) + math.pow(dy, 2)
-            angle = abs(math.asin(dy/math.sqrt(r2)))
+            angle = abs(math.asin(dy/math.sqrt(r2))) if math.sqrt(r2) > 0 else math.pi/2
 
             #Collision condition
             if (r2 <= math.pow(self.size+particles[i].size, 2)):
@@ -132,10 +211,10 @@ class Particle:
                     if (particles[i].type == self.type):
                         self.collision(particles[i])
                     else:
-                        self.annihilation(particles[i])
+                        self.annihilation(particles[i], particles)
             #Normal condition
             else: 
-                Force = (G_CONST * self.mass * particles[i].mass)/(r2)
+                Force = (G_CONST * self.mass * particles[i].mass)/r2)
                 signX = 1 if dx==0 else dx/abs(dx)
                 signY = 1 if dy==0 else dy/abs(dy)
                 ForceX = Force*math.cos(angle)*signX
@@ -144,7 +223,10 @@ class Particle:
                 GRAVITY[index][i] = ([ForceX, ForceY])
                 GRAVITY[i][index] = ([ForceX, ForceY])
     
+        return particles
+
     def pseduo_delete (self):
+        self.type = 'deleted'
         self.mass = 0
         self.v_set(0,0)
         self.color = (0,0,0)
@@ -175,22 +257,21 @@ def main():
     icon = pygame.image.load('icon.png')
     pygame.display.set_icon(icon) 
 
-    particles = createParticles(1,1,0)
+    particles = createParticles(1,1,1)
 
     #Simulation loop
     running = True
     while running:
-        screen.fill((0,0,0))
+        screen.fill((0,0,0)) 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-        
+    
         #Display particles
         for i in range(len(particles)):
             particles[i].macro_gravity(i, particles)
             particles[i].move(i)
             particles[i].display()
-        
         pygame.display.update()
 
 if __name__ == "__main__":
