@@ -1,0 +1,4 @@
+April 18 => m-a-annihil branch committ
+- Moved collision to a different function to modularize and add annihilation function
+- Added a function to convert a particle into a photon
+- Added a function to annihilate matter antimatter pairs, momentum is not conserved
