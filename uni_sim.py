@@ -5,10 +5,26 @@ import sys
 
 #GLOBAL PARAMETERS
 if (len(sys.argv)>1):
-    PARTICLE_NUMBER = int(sys.argv[1]) #>= 3
-else:
+    PARTICLE_NUMBER = int(sys.argv[1]) #>= 3        User input 
+    if (len(sys.argv)==5):
+        MATTER_RATIO = float(sys.argv[2])
+        ANTI_MATTER_RATIO = float(sys.argv[3])
+        PHOTON_RATIO = float(sys.argv[4])
+    else:                                           #Default params
+        MATTER_RATIO = 1/3
+        ANTI_MATTER_RATIO = 1/3
+        PHOTON_RATIO = 1/3 
+else:                                               #Default params 
     PARTICLE_NUMBER = 100
-WIDTH = 700
+    MATTER_RATIO = 1/3
+    ANTI_MATTER_RATIO = 1/3
+    PHOTON_RATIO = 1/3
+
+if (MATTER_RATIO+ANTI_MATTER_RATIO+PHOTON_RATIO > 1):
+    print("Bad ratio")
+    exit(1)
+
+WIDTH = 900
 HEIGHT = 600
 G_CONST = math.pow(2, PARTICLE_NUMBER/100)
 GRAVITY = []
@@ -214,7 +230,7 @@ class Particle:
                         self.annihilation(particles[i], particles)
             #Normal condition
             else: 
-                Force = (G_CONST * self.mass * particles[i].mass)/r2)
+                Force = (G_CONST * self.mass * particles[i].mass)/math.sqrt(r2)
                 signX = 1 if dx==0 else dx/abs(dx)
                 signY = 1 if dy==0 else dy/abs(dy)
                 ForceX = Force*math.cos(angle)*signX
@@ -238,13 +254,15 @@ class Particle:
 def createParticles(matter_flag, anti_matter_flag, photon_flag):
     particles = []
     ## Create particles
-    for n in range(int(PARTICLE_NUMBER/3)):
+    for n in range(int(MATTER_RATIO * PARTICLE_NUMBER)):
         if matter_flag:
             particle = Particle("matter")
             particles.append(particle)
+    for n in range(int(ANTI_MATTER_RATIO * PARTICLE_NUMBER)):
         if anti_matter_flag:
             particle = Particle("anti_matter")
             particles.append(particle)
+    for n in range(int(PHOTON_RATIO * PARTICLE_NUMBER)):
         if photon_flag:
             particle = Particle("photon")
             particles.append(particle)
