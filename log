@@ -28,3 +28,5 @@ April 19 => density-input committ
 
 April 19 => alternate gravity merge committ
 - Added conditions to collisions to make it so that the small body merges into the larger one
+- Separated simulator into three files: the main simulator, the particle class and the global variable file
+- Next: annihilation momentum, collision momentum 
