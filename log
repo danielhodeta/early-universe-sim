@@ -1,0 +1,7 @@
+April 14 => n/2-compare-multi-grav committ
+
+- Collisions with Momentum implemented
+- Size is offset by factor
+- Movement calculation made more efficient (1/2 time)
+- speed change moved to function
+- Acceleration made GLOBAL
