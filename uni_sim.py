@@ -129,13 +129,24 @@ class Particle:
 
     def collision(self, particle):
         #make it bigger
-        self.mass+= particle.mass
-        self.resize()
-        #momentum transfer
-        self.speedX = (self.p_x + particle.p_x)/self.mass
-        self.speedY = (self.p_y + particle.p_y)/self.mass
-        #Delete the second particle
-        particle.pseduo_delete()
+        if (self.mass>particle.mass):
+            self.mass+= particle.mass
+            self.resize()
+            #momentum transfer
+            speedX = (self.p_x + particle.p_x)/self.mass
+            speedY = (self.p_y + particle.p_y)/self.mass
+            self.v_set(speedX, speedY)
+            #Delete the second particle
+            particle.pseduo_delete()
+        else:
+            particle.mass+= self.mass
+            particle.resize()
+            #momentum transfer
+            speedX = (self.p_x + particle.p_x)/particle.mass
+            speedY = (self.p_y + particle.p_y)/particle.mass
+            particle.v_set(speedX, speedY)
+            #Delete the second particle
+            self.pseduo_delete()
 
     def make_photon(self):
         #Change mass
@@ -219,7 +230,7 @@ class Particle:
             angle = abs(math.asin(dy/math.sqrt(r2))) if math.sqrt(r2) > 0 else math.pi/2
 
             #Collision condition
-            if (r2 <= math.pow(self.size+particles[i].size, 2)):
+            if (r2 <= math.pow(self.size+particles[i].size, 2)/2):
                 #Once collision, gravitational force set to 0 because we don't want it to shoot to infinity
                 GRAVITY[index][i] = ([0,0])
                 GRAVITY[i][index] = ([0,0])
@@ -230,7 +241,7 @@ class Particle:
                         self.annihilation(particles[i], particles)
             #Normal condition
             else: 
-                Force = (G_CONST * self.mass * particles[i].mass)/math.sqrt(r2)
+                Force = (G_CONST * self.mass * particles[i].mass)/r2
                 signX = 1 if dx==0 else dx/abs(dx)
                 signY = 1 if dy==0 else dy/abs(dy)
                 ForceX = Force*math.cos(angle)*signX

@@ -25,3 +25,6 @@ April 18 => photon-speed branch committ
 April 19 => density-input committ
 - Enabled matter, anti-matter and photon density input
 - Made screen bigger
+
+April 19 => alternate gravity merge committ
+- Added conditions to collisions to make it so that the small body merges into the larger one
