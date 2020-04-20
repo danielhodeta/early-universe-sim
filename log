@@ -36,3 +36,9 @@ April 19 => alternate gravity merge committ
 - Separated simulator into three files: the main simulator, the particle class and the global variable file
 - Halved the square of the threshold distance needed for collision to make objects come closer to each other before merging
 
+April 19 => pair-production committ
+- Added check in main function to prevent displaying deleted particles
+- Collision function returns 0 or 1 to indicate whether self has been deleted. If it has, macro_gravity() will return
+- Added two functions in the Particle class to convery a particle into matter and anti matter
+- Created pair_production function
+- Created a threshold variable to store the value of the collision threshold for baryons and photons
