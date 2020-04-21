@@ -27,7 +27,7 @@ if (MATTER_RATIO+ANTI_MATTER_RATIO+PHOTON_RATIO > 1):
 
 
 #Set screen height and width 
-WIDTH = 900
+WIDTH = 600
 HEIGHT = 600
 
 #Gravitational constant
@@ -42,8 +42,14 @@ for i in range (PARTICLE_NUMBER):
     GRAVITY.append(row)
 
 #Global speed parameters
-LIGHT_SPEED = 1
-BARYON_SPEED_MAX = 0.7
+LIGHT_SPEED = 1.5
+BARYON_SPEED_MAX = 1
+
+#Gravitational mass 
+BARYON_GRAVITY_MASS = 1.5
+
+#Pair production probability
+LAMBDA = 0.1
 
 #Set screen
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))

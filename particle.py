@@ -171,7 +171,7 @@ class Particle:
         for i in range(len(GLOBAL.GRAVITY)-1):
             GLOBAL.GRAVITY[i].append([0,0])
 
-    def annihilation(self, particle, particles):
+    def annihilation(self, particle, particles, self_i, particle_i):
         if (self.mass == 1):
             self.make_photon()
         else:
@@ -200,18 +200,29 @@ class Particle:
 
             new_particle.add_particle(particles)
 
-    def pair_produciton(self, particle):
-        self.make_matter()
-        particle.make_anti_matter()
+        self.move(self_i)
+        particle.move(particle_i)
+
+    def pair_produciton(self, particle, self_i, particle_i):
+        rand_num = random.random()
+        if (rand_num<GLOBAL.LAMBDA):
+            self.make_matter()
+            particle.make_anti_matter()
+            steps = 3
+            for i in range(steps):
+                self.move(self_i)
+                particle.move(particle_i)
 
     def display(self):
         pygame.draw.circle(GLOBAL.SCREEN, self.color, (int(self.x),int(self.y)), self.size, self.size)
     
     def move(self, index):
         self.vectors = GLOBAL.GRAVITY[index]
-        for vector in self.vectors:
+        for i in range(len(self.vectors)):
+            vector = self.vectors[i]
             M = 1 if self.mass == 0 else self.mass
             self.v_set(self.speedX+(vector[0]/M), self.speedY+(vector[1]/M))
+            GLOBAL.GRAVITY[index][i] = [0,0]    #resetting vectors for next calculation -- prevents deleted particles from influencing
 
         #attributes for no bounds
         self.x = (self.x + self.speedX)
@@ -233,9 +244,11 @@ class Particle:
 
             #Collision condition
             if(self.type == 'photon' and particles[i].type=='photon'):
-                col_threshold = 10
+                col_threshold = 5
+            elif ((self.type == 'matter' or self.type == 'anti_matter') and (self.type != particles[i].type)):
+                col_threshold = math.pow(self.size+particles[i].size, 2)*3 
             else:
-                col_threshold = math.pow(self.size+particles[i].size, 2)*2
+                col_threshold = math.pow(self.size+particles[i].size, 2)/2
         
             if (r2 <= col_threshold):
                 #Once collision, gravitational force set to 0 because we don't want it to shoot to infinity
@@ -246,15 +259,15 @@ class Particle:
                         if(self.collision(particles[i])):
                             return  #self has been deleted
                     else:
-                        self.annihilation(particles[i], particles)
+                        self.annihilation(particles[i], particles, index, i)
                 else:
                     if (particles[i].type == self.type):
-                        self.pair_produciton(particles[i])
+                        self.pair_produciton(particles[i], index, i)
                     else:
                         continue
             #Normal condition
             else: 
-                Force = (GLOBAL.G_CONST * self.mass * particles[i].mass)/r2
+                Force = (GLOBAL.G_CONST * (self.mass * GLOBAL.BARYON_GRAVITY_MASS) * particles[i].mass)/r2
                 signX = 1 if dx==0 else dx/abs(dx)
                 signY = 1 if dy==0 else dy/abs(dy)
                 ForceX = Force*math.cos(angle)*signX

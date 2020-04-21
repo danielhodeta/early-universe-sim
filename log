@@ -42,3 +42,11 @@ April 19 => pair-production committ
 - Added two functions in the Particle class to convery a particle into matter and anti matter
 - Created pair_production function
 - Created a threshold variable to store the value of the collision threshold for baryons and photons
+
+April 21 => pair-production committ
+- Added a feature where gravity can be strengthened by a factor
+- Pair production is probabilistic
+- After annihilation and pair production the new particles will move a couple of steps before being displayed to prevent continuous annihilation and pair production
+- Every time a particle moves, its acceleration vectors will be reset to make sure only relevant particles are causing acceleration
+- Added a separate collision threshold for annihilation and normal collision
+- In the main function, removed deleted particle condition from the macro gravity line and moved it to the display function line. This is to make sure the simulation runs at a constant rate but deleted particles are not displayed

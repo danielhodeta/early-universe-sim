@@ -40,9 +40,9 @@ def main():
     
         #Display particles
         for i in range(len(particles)):
+            particles[i].macro_gravity(i, particles)
+            particles[i].move(i)
             if (not particles[i].deleted):
-                particles[i].macro_gravity(i, particles)
-                particles[i].move(i)
                 particles[i].display()
         pygame.display.update()
         GLOBAL.SCREEN.fill((0,0,0)) 
