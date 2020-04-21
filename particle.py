@@ -25,8 +25,8 @@ class Particle:
 
         #Velocity init
         if (type != 'photon'):
-            self.speedX = 0#random.uniform (-1,1)
-            self.speedY = 0#random.uniform (-1,1)
+            self.speedX = 0#random.uniform (-0.5,0.5)
+            self.speedY = 0#random.uniform (-0.5,0.5)
         else:
             self.speedX = random.uniform(-GLOBAL.LIGHT_SPEED, GLOBAL.LIGHT_SPEED)
             y_direction = (random.randrange(-1, 2, 2))
@@ -104,6 +104,8 @@ class Particle:
             self.v_set(speedX, speedY)
             #Delete the second particle
             particle.pseduo_delete()
+            
+            return 0 #self deletion flag
         else:
             particle.mass+= self.mass
             particle.resize()
@@ -114,6 +116,8 @@ class Particle:
             #Delete the second particle
             self.pseduo_delete()
 
+            return 1 #self deletion flag
+
     def make_photon(self):
         #Change mass
         self.mass = 0
@@ -121,6 +125,34 @@ class Particle:
         self.type = 'photon'
         #Change color
         self.color = (255, 166, 83)
+        #Change speed
+        self.v_set(self.speedX, self.speedY)            #v_set() automatically scales speedX and speedY to reach LIGHT_SPEED
+        #Change size
+        self.resize()
+        #Calculate p
+        self.calc_p()
+    
+    def make_matter(self):
+        #Change mass
+        self.mass = 1
+        #Change type
+        self.type = 'matter'
+        #Change color
+        self.color = (255, 255, 255)
+        #Change speed
+        self.v_set(self.speedX, self.speedY)            #v_set() automatically scales speedX and speedY to reach LIGHT_SPEED
+        #Change size
+        self.resize()
+        #Calculate p
+        self.calc_p()
+
+    def make_anti_matter(self):
+        #Change mass
+        self.mass = 1
+        #Change type
+        self.type = 'anti_matter'
+        #Change color
+        self.color = (50,50,255)
         #Change speed
         self.v_set(self.speedX, self.speedY)            #v_set() automatically scales speedX and speedY to reach LIGHT_SPEED
         #Change size
@@ -139,7 +171,7 @@ class Particle:
         for i in range(len(GLOBAL.GRAVITY)-1):
             GLOBAL.GRAVITY[i].append([0,0])
 
-    def annihilation(self, particle, particles):
+    def annihilation(self, particle, particles, self_i, particle_i):
         if (self.mass == 1):
             self.make_photon()
         else:
@@ -168,26 +200,43 @@ class Particle:
 
             new_particle.add_particle(particles)
 
+        steps = 3
+        for i in range(steps):
+            self.move(self_i)
+            particle.move(particle_i)
+
+    def pair_produciton(self, particle, self_i, particle_i):
+        rand_num = random.random()
+        if (rand_num<GLOBAL.LAMBDA):
+            self.make_matter()
+            particle.make_anti_matter()
+            steps = 3
+            for i in range(steps):
+                self.move(self_i)
+                particle.move(particle_i)
+
     def display(self):
         pygame.draw.circle(GLOBAL.SCREEN, self.color, (int(self.x),int(self.y)), self.size, self.size)
     
     def move(self, index):
         self.vectors = GLOBAL.GRAVITY[index]
-        for vector in self.vectors:
+        for i in range(len(self.vectors)):
+            vector = self.vectors[i]
             M = 1 if self.mass == 0 else self.mass
             self.v_set(self.speedX+(vector[0]/M), self.speedY+(vector[1]/M))
+            GLOBAL.GRAVITY[index][i] = [0,0]    #resetting vectors for next calculation -- prevents deleted particles from influencing
 
         #attributes for no bounds
         self.x = (self.x + self.speedX)
         self.y = (self.y + self.speedY)
     
     def macro_gravity(self, index, particles):
-        if (self.type == 'photon' or self.deleted):
+        if (self.deleted):
             return
         for i in range (len(particles)):
             if i == index: # don't calculate gravity on self
                 continue
-            elif (particles[i].deleted or particles[i].type=='photon'): #if deleted or photon skip
+            elif (particles[i].deleted): #if deleted skip
                 continue
 
             dx = particles[i].x - self.x
@@ -196,15 +245,28 @@ class Particle:
             angle = abs(math.asin(dy/math.sqrt(r2))) if math.sqrt(r2) > 0 else math.pi/2
 
             #Collision condition
-            if (r2 <= math.pow(self.size+particles[i].size, 2)/2):
+            if(self.type == 'photon' and particles[i].type=='photon'):
+                col_threshold = 5
+            elif ((self.type == 'matter' or self.type == 'anti_matter') and (self.type != particles[i].type)):
+                col_threshold = math.pow(self.size+particles[i].size, 2)*3 
+            else:
+                col_threshold = math.pow(self.size+particles[i].size, 2)/2
+        
+            if (r2 <= col_threshold):
                 #Once collision, gravitational force set to 0 because we don't want it to shoot to infinity
                 GLOBAL.GRAVITY[index][i] = ([0,0])
                 GLOBAL.GRAVITY[i][index] = ([0,0])
-                if (self.type == 'matter' or self.type == 'anti_matter'):
+                if (self.type != 'photon' and particles[i].type != 'photon'):
                     if (particles[i].type == self.type):
-                        self.collision(particles[i])
+                        if(self.collision(particles[i])):
+                            return  #self has been deleted
                     else:
-                        self.annihilation(particles[i], particles)
+                        self.annihilation(particles[i], particles, index, i)
+                else:
+                    if (particles[i].type == self.type):
+                        self.pair_produciton(particles[i], index, i)
+                    else:
+                        continue
             #Normal condition
             else: 
                 Force = (GLOBAL.G_CONST * self.mass * particles[i].mass)/r2
@@ -215,8 +277,6 @@ class Particle:
 
                 GLOBAL.GRAVITY[index][i] = ([ForceX, ForceY])
                 GLOBAL.GRAVITY[i][index] = ([ForceX, ForceY])
-    
-        return particles
 
     def pseduo_delete (self):
         self.type = 'deleted'
