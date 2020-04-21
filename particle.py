@@ -25,8 +25,8 @@ class Particle:
 
         #Velocity init
         if (type != 'photon'):
-            self.speedX = 0#random.uniform (-1,1)
-            self.speedY = 0#random.uniform (-1,1)
+            self.speedX = 0#random.uniform (-0.5,0.5)
+            self.speedY = 0#random.uniform (-0.5,0.5)
         else:
             self.speedX = random.uniform(-GLOBAL.LIGHT_SPEED, GLOBAL.LIGHT_SPEED)
             y_direction = (random.randrange(-1, 2, 2))
@@ -200,8 +200,10 @@ class Particle:
 
             new_particle.add_particle(particles)
 
-        self.move(self_i)
-        particle.move(particle_i)
+        steps = 3
+        for i in range(steps):
+            self.move(self_i)
+            particle.move(particle_i)
 
     def pair_produciton(self, particle, self_i, particle_i):
         rand_num = random.random()
@@ -267,7 +269,7 @@ class Particle:
                         continue
             #Normal condition
             else: 
-                Force = (GLOBAL.G_CONST * (self.mass * GLOBAL.BARYON_GRAVITY_MASS) * particles[i].mass)/r2
+                Force = (GLOBAL.G_CONST * self.mass * particles[i].mass)/r2
                 signX = 1 if dx==0 else dx/abs(dx)
                 signY = 1 if dy==0 else dy/abs(dy)
                 ForceX = Force*math.cos(angle)*signX
