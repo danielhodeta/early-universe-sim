@@ -50,3 +50,8 @@ April 21 => pair-production committ
 - Every time a particle moves, its acceleration vectors will be reset to make sure only relevant particles are causing acceleration
 - Added a separate collision threshold for annihilation and normal collision
 - In the main function, removed deleted particle condition from the macro gravity line and moved it to the display function line. This is to make sure the simulation runs at a constant rate but deleted particles are not displayed
+
+April 21 => post-ann-steps
+- Photons step 3 times after annihilation
+- Removed gravity strengthening factor and integrated it with the gravitational constant
+- Window size is a function of particle number
