@@ -1,3 +1,7 @@
+# Daniel Hodeta
+# Early Universe Simulator
+# Simulation File
+
 import pygame
 import random
 import math

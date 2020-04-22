@@ -1,3 +1,7 @@
+# Daniel Hodeta
+# Early Universe Simulator
+# Particle Class
+
 import math
 import random
 import GLOBAL

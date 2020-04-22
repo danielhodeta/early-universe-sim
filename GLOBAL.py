@@ -1,4 +1,6 @@
-#A list of all global parameters
+# Daniel Hodeta
+# Early Universe Simulator
+# Global Variables
 
 import math
 import sys
