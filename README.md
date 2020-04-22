@@ -6,9 +6,7 @@ Usage:
 
   `python uni-sim.py`
 
-**Note**
-
-uni-sim.py will create a configuration file named *sim_config.txt* in it's current directory. This file will have all user configurable parameters and flags. Each of these parameters and flags (and their default values) will be explained below.
+**Note**: uni-sim.py will create a configuration file named *sim_config.txt* in it's current directory. This file will have all user configurable parameters and flags. Each of these parameters and flags (and their default values) will be explained below.
 
 **Parameters**
 
