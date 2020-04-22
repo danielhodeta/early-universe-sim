@@ -65,3 +65,6 @@ April 21 => spherical-universe committ
 
 April 21 => user-input-params committ
 - Implemented user input of global variables through a config file
+
+April 21 => user-input-with-spherical-uni committ
+- Added a spherical universe flag to the config file. User can now turn spherical universe features on or off

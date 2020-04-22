@@ -13,11 +13,11 @@ MATTER_RATIO=1/3
 ANTI_MATTER_RATIO=1/3
 PHOTON_RATIO=1/3
 LAMBDA=0.01
-G_CONST = 1
+G_CONST = 2
 
 #Flags
-STRONG_GRAVITY=0
 ZERO_INITIAL_BARYON_SPEED=0
+SPHERICAL_UNIVERSE=1
 
 # ==                ==
 
@@ -42,6 +42,7 @@ except FileNotFoundError:
 
     param_file.write("#flags\n")
     param_file.write("ZERO_INITIAL_BARYON_SPEED=0\n")
+    param_file.write("SPHERICAL_UNIVERSE=1\n")
 
 params = param_file.readlines()
 for param in params:
@@ -69,6 +70,8 @@ for param in params:
                 G_CONST = G_CONST * float(val)
             elif (var == 'ZERO_INITIAL_BARYON_SPEED'):
                 ZERO_INITIAL_BARYON_SPEED = int(val)
+            elif (var == 'SPHERICAL_UNIVERSE'):
+                SPHERICAL_UNIVERSE = int(val)
         except ValueError:
             continue
 
