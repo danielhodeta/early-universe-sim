@@ -144,7 +144,7 @@ class Particle:
         #Change color
         self.color = (255, 255, 255)
         #Change speed
-        self.v_set(self.speedX, self.speedY)            #v_set() automatically scales speedX and speedY to reach LIGHT_SPEED
+        self.v_set(self.speedX, self.speedY)            
         #Change size
         self.resize()
         #Calculate p
@@ -158,7 +158,7 @@ class Particle:
         #Change color
         self.color = (50,50,255)
         #Change speed
-        self.v_set(self.speedX, self.speedY)            #v_set() automatically scales speedX and speedY to reach LIGHT_SPEED
+        self.v_set(self.speedX, self.speedY)            
         #Change size
         self.resize()
         #Calculate p
