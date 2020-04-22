@@ -25,8 +25,8 @@ class Particle:
 
         #Velocity init
         if (type != 'photon'):
-            self.speedX = GLOBAL.INITIAL_BARYON_SPEEDX
-            self.speedY = GLOBAL.INITIAL_BARYON_SPEEDY
+            self.speedX = 0#random.uniform (-0.5,0.5)
+            self.speedY = 0#random.uniform (-0.5,0.5)
         else:
             self.speedX = random.uniform(-GLOBAL.LIGHT_SPEED, GLOBAL.LIGHT_SPEED)
             y_direction = (random.randrange(-1, 2, 2))
@@ -216,9 +216,7 @@ class Particle:
                 particle.move(particle_i)
 
     def display(self):
-        x_pos = int(self.x) 
-        y_pos = int(self.y) 
-        pygame.draw.circle(GLOBAL.SCREEN, self.color, (x_pos,y_pos), self.size, self.size)
+        pygame.draw.circle(GLOBAL.SCREEN, self.color, (int(self.x),int(self.y)), self.size, self.size)
     
     def move(self, index):
         self.vectors = GLOBAL.GRAVITY[index]
@@ -229,8 +227,8 @@ class Particle:
             GLOBAL.GRAVITY[index][i] = [0,0]    #resetting vectors for next calculation -- prevents deleted particles from influencing
 
         #attributes for no bounds
-        self.x = (self.x + self.speedX) % GLOBAL.WIDTH
-        self.y = (self.y + self.speedY) % GLOBAL.HEIGHT
+        self.x = (self.x + self.speedX)
+        self.y = (self.y + self.speedY)
     
     def macro_gravity(self, index, particles):
         if (self.deleted):
@@ -240,17 +238,9 @@ class Particle:
                 continue
             elif (particles[i].deleted): #if deleted skip
                 continue
-                
+
             dx = particles[i].x - self.x
-            dx_reverse = -GLOBAL.WIDTH + dx if dx > 0 else GLOBAL.WIDTH + dx 
-            minX = min(abs(dx), abs(dx_reverse))
-            dx = dx if abs(dx)==minX else dx_reverse
-
             dy = particles[i].y - self.y
-            dy_reverse = -GLOBAL.HEIGHT + dy if dy > 0 else GLOBAL.HEIGHT + dy
-            minY = min(abs(dy), abs(dy_reverse))
-            dy = dy if abs(dy)==minY else dy_reverse
-
             r2 = math.pow(dx, 2) + math.pow(dy, 2)
             angle = abs(math.asin(dy/math.sqrt(r2))) if math.sqrt(r2) > 0 else math.pi/2
 
