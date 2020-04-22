@@ -56,5 +56,15 @@ April 21 => post-ann-steps committ
 - Removed gravity strengthening factor and integrated it with the gravitational constant
 - Window size is a function of particle number
 
+April 21 => spherical-universe committ
+- Changed width to height proportion
+- Changed gravitational constant to 1
+- Changed pair production probability to 0.01
+- Each particle now starts with a random speed
+- Made universe spherical, i.e. the window of the simulation is all there is to the unviverse
+
 April 21 => user-input-params committ
 - Implemented user input of global variables through a config file
+
+April 21 => user-input-with-spherical-uni committ
+- Added a spherical universe flag to the config file. User can now turn spherical universe features on or off
