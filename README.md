@@ -8,6 +8,12 @@ Usage:
 
 **Note**: uni-sim.py will create a configuration file named *sim_config.txt* in it's current directory. This file will have all user configurable parameters and flags. Each of these parameters and flags (and their default values) will be explained below.
 
+Requirements:
+
+  - `python 3` : [Download Here](https://www.python.org/downloads/)
+  
+  - `pygame` : run `pip install pygame` on terminal after installing python
+  
 **Parameters**
 
 There are 6 user configurable parameters
