@@ -68,3 +68,7 @@ April 21 => user-input-params committ
 
 April 21 => user-input-with-spherical-uni committ
 - Added a spherical universe flag to the config file. User can now turn spherical universe features on or off
+
+April 21 => master committ
+- Updated readme
+- G_CONST error check added

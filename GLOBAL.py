@@ -84,6 +84,9 @@ if (MATTER_RATIO+ANTI_MATTER_RATIO+PHOTON_RATIO > 1):
 if (LAMBDA > 1):
     print("Bad pair production ratio")
     exit(1)
+if (G_CONST<0):
+    print("Bad gravity factor")
+    exit(1)
 
 
 #Set screen height and width 
