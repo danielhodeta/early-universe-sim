@@ -25,8 +25,12 @@ class Particle:
 
         #Velocity init
         if (type != 'photon'):
-            self.speedX = GLOBAL.INITIAL_BARYON_SPEEDX
-            self.speedY = GLOBAL.INITIAL_BARYON_SPEEDY
+            if (not GLOBAL.ZERO_INITIAL_BARYON_SPEED):
+                self.speedX = random.uniform (-0.75,0.75)
+                self.speedY = random.uniform (-0.75,0.75)
+            else:
+                self.speedX = 0
+                self.speedY = 0
         else:
             self.speedX = random.uniform(-GLOBAL.LIGHT_SPEED, GLOBAL.LIGHT_SPEED)
             y_direction = (random.randrange(-1, 2, 2))

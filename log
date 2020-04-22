@@ -51,7 +51,7 @@ April 21 => pair-production committ
 - Added a separate collision threshold for annihilation and normal collision
 - In the main function, removed deleted particle condition from the macro gravity line and moved it to the display function line. This is to make sure the simulation runs at a constant rate but deleted particles are not displayed
 
-April 21 => post-ann-steps
+April 21 => post-ann-steps committ
 - Photons step 3 times after annihilation
 - Removed gravity strengthening factor and integrated it with the gravitational constant
 - Window size is a function of particle number
@@ -63,3 +63,5 @@ April 21 => spherical-universe committ
 - Each particle now starts with a random speed
 - Made universe spherical, i.e. the window of the simulation is all there is to the unviverse
 
+April 21 => user-input-params committ
+- Implemented user input of global variables through a config file
