@@ -1,4 +1,4 @@
-# early-universe-sim
+# Early Universe Simulator
 
 This is a simulation of the interaction between matter, antimatter and photons. It hopes to recreate a very basic image of the early universe in an attempt to understand the relative densities of matter, antimatter and photons needed for the current matter dominated universe to develop.
 
