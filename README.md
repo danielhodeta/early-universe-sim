@@ -14,6 +14,12 @@ Requirements:
   
   - `pygame` : run `pip install pygame` on terminal after installing python
   
+Particle Types:
+
+  - White  : Matter
+  - Blue   : Anti-matter
+  - Orange : Photon
+  
 **Parameters**
 
 There are 6 user configurable parameters
